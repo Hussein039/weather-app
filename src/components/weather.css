@@ -119,3 +119,57 @@ ul{
   color: rgb(6, 255, 68);
   font-size: 2rem;
 }
+
+.container2 .img .days {
+  display: flex;
+  flex-wrap: wrap;
+  font-size:0.8rem;
+}
+
+.container2 .img .days ul li {
+  font-size: 1.2rem;
+  flex-basis: 25%;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .container {
+      border-radius: 0;
+      
+  }
+  .container::before {
+      border-radius: 0;
+  }
+  .weather-container {
+      font-size: 0.8rem;
+      margin: 50px;
+  }
+  .weather .location {
+      font-size: 1.2rem;
+  }
+  .weather .temp {
+      font-size: 2.5rem;
+  }
+  .icons {
+      margin-right: 50px;
+  }
+  .container2 .img {
+      height: 150px;
+  }
+  .container2 .img .days ul li {
+      padding: 20px;
+  }
+
+  .container2 .img .days {
+    width: 100%;
+    max-width: 100%;
+    margin: 10 auto;
+    overflow: hidden;
+    font-size:0.3rem;
+  }
+
+  .container2 .img .days ul li {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}

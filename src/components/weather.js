@@ -104,6 +104,7 @@ function Weather() {
       <div className='container'>
         <Header />
         <div className='weather-container'> 
+        {error && <div className='error'>Error: {error.message}</div>}
           {weather.name && (
             <div className='weather'>
               <div className='icons'>{displayWeatherImg(weather)}</div>
@@ -114,7 +115,7 @@ function Weather() {
               <h3>{dateBuilder(new Date())}</h3>
               
           </div>
-          )}
+          ) }
         </div>
 
         <div className='container2'>
