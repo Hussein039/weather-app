@@ -17,7 +17,7 @@ import { faCloud, faWind, faPooStorm, faHouse, faLocationDot, faX, faBars } from
 function Weather() {
   const [weather, setWeather] = useState('');
   const [weather2, setWeather2] = useState('');
-  const [city, setCity] = useState('Toronto');
+  const [city, setCity] = useState('');
   const [error, setError] = useState(null);
   const API_KEY = '6accfd44f544ab9a098f5a425a7348b3';
   const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
