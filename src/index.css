@@ -6,5 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  background: rgb(30, 16, 59);
+  background: -moz-linear-gradient(13deg, rgb(88, 74, 119) 0%, rgb(233, 231, 230) 100%);
+  background: -webkit-linear-gradient(13deg, rgba(106,68,189,1) 0%, rgb(172, 112, 61) 100%);
+  background-repeat: round ;
 }
