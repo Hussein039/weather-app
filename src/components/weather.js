@@ -125,11 +125,11 @@ function Weather() {
                     </li>
                     <li>
                       <p>Minimum</p>
-                      <span>{weather.main.temp_min}</span>
+                      <span>{Math.round(weather.main.temp_min)}</span>
                     </li>
                     <li>
                       <p>Maximum</p>
-                      <span>{weather.main.temp_max}</span>
+                      <span>{Math.round(weather.main.temp_max)}</span>
                     </li>
                     <li>
                       <p>Pressure</p>
@@ -149,8 +149,8 @@ function Weather() {
               <ul>
                   {nextFiveDays.map((day, index)=>(
                     <li key={index}>
-                      <p>{dateBuilder(new Date(day.dt_txt))}</p>
                       <span>{Math.round(day.main.temp)}°c</span>
+                      <p>{dateBuilder(new Date(day.dt_txt))}</p>
                     </li>
                   ))}
               </ul>
