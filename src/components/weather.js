@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import clear from "../images/Clear.png";
-import cloud from "../images/Cloud.png";
-import rain from "../images/Rain.png";
-import storm from "../images/Storm.png";
-import snow from "../images/Snow.png";
-import sun from "../images/sun.png";
-import weather3 from "../images/weather3.png";
 import './weather.css';
-import Header from './header';
-import WeatherSearch from './weatherSearch';
 import './header.css'
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,18 +7,34 @@ import { faCloud, faWind, faPooStorm, faHouse, faLocationDot, faX, faBars } from
 
 function Weather() {
   const [weather, setWeather] = useState('');
-  const [weather2, setWeather2] = useState('');
   const [city, setCity] = useState('');
   const [error, setError] = useState(null);
   const API_KEY = '6accfd44f544ab9a098f5a425a7348b3';
   const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
-  const [nextThreeDays, setnextThreeDays] = useState([]);
+  const [nextFiveDays, setnextFiveDays] = useState([]);
   const [toggle, setToggle] = useState(false);
 
   const handleClick = () => {
     setToggle(!toggle);
   };
 
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
+        axios.get(API_URL)
+          .then(response => {
+            setWeather(response.data);
+            setCity(response.data.name);
+          })
+          .catch(error => {
+            setError(error);
+          });
+      }
+    );
+  }, []);
 
   useEffect(() => {
     const API_URL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
@@ -37,34 +44,14 @@ function Weather() {
       for (let i = 0; i < days.length; i += 8) {
         if(nextSeven.length<8){
           nextSeven.push(days[i]);
-          }
-          setnextThreeDays(nextSeven);
+        }
+        setnextFiveDays(nextSeven);
       }
-      setnextThreeDays(nextSeven);
     }).catch(error => {
       setError(error);
     });
   },[city]);
 
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            const { latitude, longitude } = position.coords;
-            
-            const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
-            axios.get(API_URL)
-                .then(response => {
-                    setWeather(response.data);
-                })
-                .catch(error => {
-                    setError(error);
-                });
-        }
-        
-    );
-  }, [city]);
-  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -72,7 +59,7 @@ function Weather() {
       setWeather(res.data);
     }).catch(err => {
       console.log(err);
-    })
+    });
   };
 
   const dateBuilder = (d) => {
@@ -86,40 +73,10 @@ function Weather() {
 
     return [day, date, month, year].join(" , ");
   };
-
-  const displayWeatherImg =(weather)=> {
-    if (weather.weather[0].main === "Clouds") {
-      return <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Clouds'/>;
-    } else if (weather.weather[0].main === "Clear") {
-      return <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Clear'/>;
-    } else if (weather.weather[0].main === "Rain") {
-      return <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Rain'/>;
-    } else if (weather.weather[0].main === "Thunderstorm") {
-      return <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Thunderstorm'/>;
-    } else if (weather.weather[0].main === "Snow") {
-      return <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Snow'/>;
-    } 
-    else {
-      return <img src={weather} alt='default'/>;
-      }
-  }
   
-
-
-
   return (
     <div className='main-container'> 
-            {weather2.name && (
-                <div>
-                    <p>City: {weather2.name}</p>
-                    <p>Temperature: {weather2.main.temp}</p>
-                    <p>Humidity: {weather2.main.humidity}</p>
-                    <p>Feelings: {weather2.main.feels_like}</p>
-          <p>Country: {weather2.sys.country}</p>
-          <img className="city-icon" src={`https://openweathermap.org/img/wn/${weather2.weather[0].icon}@2x.png`} alt={weather2.weather[0].description} />
-          <p>Weather condition: {weather2.weather[0].main}</p>
-                </div>
-            )}  
+            
       <div className='container'>
       <header>
         <button className='toggle' onClick={handleClick}>
@@ -141,7 +98,7 @@ function Weather() {
         
           {weather.name &&(
             <div className='weather'>
-              <div className='icons'>{displayWeatherImg(weather)}</div>
+              <div className='icons'>{ <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt='Clouds'/>}</div>
               <span className='location'><FontAwesomeIcon icon={faLocationDot} /> {weather.name}, {weather.sys.country}</span>
               <span className='temp'> {Math.round(weather.main.temp)}°c </span>
               <p>Feels Like: {Math.round(weather.main.feels_like)}</p>
@@ -185,7 +142,7 @@ function Weather() {
         </div>
         <div className='days'>
               <ul>
-                  {nextThreeDays.map((day, index)=>(
+                  {nextFiveDays.map((day, index)=>(
                     <li key={index}>
                       <p>{dateBuilder(new Date(day.dt_txt))}</p>
                       <span>{Math.round(day.main.temp)}°c</span>
