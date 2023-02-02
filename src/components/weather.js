@@ -20,23 +20,6 @@ function Weather() {
 
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const { latitude, longitude } = position.coords;
-        const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
-        axios.get(API_URL)
-          .then(response => {
-            setWeather(response.data);
-            setCity(response.data.name);
-          })
-          .catch(error => {
-            setError(error);
-          });
-      }
-    );
-  }, []);
-
-  useEffect(() => {
     const API_URL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
     axios.get(API_URL).then(response => {
       let days = response.data.list;
@@ -44,22 +27,44 @@ function Weather() {
       for (let i = 0; i < days.length; i += 8) {
         if(nextSeven.length<8){
           nextSeven.push(days[i]);
-        }
-        setnextFiveDays(nextSeven);
+          }
+          setnextFiveDays(nextSeven);
       }
+      setnextFiveDays(nextSeven);
     }).catch(error => {
       setError(error);
     });
   },[city]);
 
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            const { latitude, longitude } = position.coords;
+            
+            const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
+            axios.get(API_URL)
+                .then(response => {
+                  setWeather(response.data);
+                  setCity(response.data.name);
+                })
+                .catch(error => {
+                    setError(error);
+                });
+      }
+    );
+  }, []);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { latitude, longitude } = weather.coord;
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
 
     axios.get(URL).then(res => {
       setWeather(res.data);
     }).catch(err => {
       console.log(err);
-    });
+    })
   };
 
   const dateBuilder = (d) => {
